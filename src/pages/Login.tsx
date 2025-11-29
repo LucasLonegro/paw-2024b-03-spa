@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff } from "lucide-react"
+import api from "@/lib/api"
 
 const loginSchema = z.object({
   email: z
@@ -42,12 +43,15 @@ export default function Login() {
     setSubmitError("")
 
     try {
-      // Aquí iría tu llamada real a la API de login
-      console.log("Login attempt with:", values)
-      // Simulación de delay de red
-      await new Promise(resolve => setTimeout(resolve, 500))
+      const loginEndpoint =
+        import.meta.env.VITE_LOGIN_ENDPOINT || "/auth/login"
+
+      const response = await api.post(loginEndpoint, values)
+      console.log("Login exitoso:", response.data)
+
       navigate("/")
     } catch (err) {
+      // Podés mejorar este manejo según la estructura de errores de tu API
       setSubmitError("Ocurrió un error al iniciar sesión. Intenta nuevamente.")
     }
   }
