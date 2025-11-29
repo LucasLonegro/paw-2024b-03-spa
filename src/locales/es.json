@@ -1,0 +1,5 @@
+{
+    "welcome": "Bienvenido a mi Tienda",
+    "cart_items": "Tienes {{count}} productos",
+    "login": "Iniciar Sesión"
+  }

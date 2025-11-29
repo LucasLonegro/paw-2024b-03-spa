@@ -3,7 +3,8 @@ import { Layout } from "./components/Layout"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 
-export const App = () => {
+
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>

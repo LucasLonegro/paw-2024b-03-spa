@@ -1,0 +1,5 @@
+{
+    "welcome": "Welcome to my Store",
+    "cart_items": "You have {{count}} products",
+    "login": "Login"
+  }
