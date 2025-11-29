@@ -1,40 +1,55 @@
-"use client"
-
-import type React from "react"
-
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff } from "lucide-react"
 
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "El email es requerido")
+    .email("Por favor ingresa un email válido"),
+  password: z
+    .string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres"),
+})
+
+type LoginFormValues = z.infer<typeof loginSchema>
+
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [submitError, setSubmitError] = useState("")
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
 
-    // Validación básica
-    if (!email || !password) {
-      setError("Por favor completa todos los campos")
-      return
+  const onSubmit = async (values: LoginFormValues) => {
+    setSubmitError("")
+
+    try {
+      // Aquí iría tu llamada real a la API de login
+      console.log("Login attempt with:", values)
+      // Simulación de delay de red
+      await new Promise(resolve => setTimeout(resolve, 500))
+      navigate("/")
+    } catch (err) {
+      setSubmitError("Ocurrió un error al iniciar sesión. Intenta nuevamente.")
     }
-
-    if (!email.includes("@")) {
-      setError("Por favor ingresa un email válido")
-      return
-    }
-
-    // Simulación de login exitoso
-    console.log("Login attempt with:", { email, password })
-    navigate("/")
   }
 
   return (
@@ -54,7 +69,7 @@ export default function Login() {
           </CardHeader>
 
           <CardContent className="space-y-5">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Email Input */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -62,10 +77,14 @@ export default function Login() {
                   id="email"
                   type="email"
                   placeholder="tu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   className="h-11"
+                  {...register("email")}
                 />
+                {errors.email && (
+                  <p className="text-xs text-destructive mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               {/* Password Input */}
@@ -84,10 +103,14 @@ export default function Login() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
                     className="h-11 pr-10"
+                    {...register("password")}
                   />
+                  {errors.password && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -100,15 +123,19 @@ export default function Login() {
               </div>
 
               {/* Error Message */}
-              {error && (
+              {submitError && (
                 <div className="text-sm text-destructive bg-destructive/10 border border-destructive/40 p-3 rounded-lg">
-                  {error}
+                  {submitError}
                 </div>
               )}
 
               {/* Submit Button */}
-              <Button type="submit" className="w-full h-11 font-medium">
-                Iniciar sesión
+              <Button
+                type="submit"
+                className="w-full h-11 font-medium"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
               </Button>
             </form>
 
