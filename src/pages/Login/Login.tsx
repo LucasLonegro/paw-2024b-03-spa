@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { setCredentials } from "../../features/auth/authSlice"
+import { loginSuccess } from "../../features/auth/authSlice"
 import styles from "./Login.module.css"
 
 export const Login = () => {
@@ -52,13 +52,16 @@ export const Login = () => {
         token = token.substring(7)
       }
 
-      // Intentar obtener el usuario del body (opcional)
+      // Intentar obtener el usuario del body (debería venir en la respuesta)
       const data = await response.json().catch(() => ({}))
-      const user = data.user || null
+      const user = data.user
+      if (!user) {
+        throw new Error("No se recibió información de usuario")
+      }
 
-      // Guardar en Redux usando la acción setCredentials
+      // Guardar en Redux usando la acción loginSuccess
       dispatch(
-        setCredentials({
+        loginSuccess({
           token,
           user,
         }),
