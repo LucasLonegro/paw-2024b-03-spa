@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { loginSuccess } from "../../features/auth/authSlice"
-import styles from "./Login.module.css"
+import { Button } from "@/components/ui/button"
 
 export const Login = () => {
   const [email, setEmail] = useState("")
@@ -82,64 +82,80 @@ export const Login = () => {
   }
 
   return (
-    <div className={styles.login}>
-      <div className={styles.loginContainer}>
-        <div className={styles.loginCard}>
-          <h1 className={styles.title}>Iniciar Sesión</h1>
-          <p className={styles.subtitle}>
-            Accede a tu cuenta para disfrutar de todos los beneficios
-          </p>
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-200 px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="rounded-xl border bg-card text-card-foreground shadow-lg p-8 space-y-6">
+          <div className="space-y-2 text-center">
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Iniciar sesión
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Accede a tu cuenta para disfrutar de todos los beneficios
+            </p>
+          </div>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGroup}>
-              <label htmlFor="email" className={styles.label}>
-                Correo Electrónico
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-foreground"
+              >
+                Correo electrónico
               </label>
               <input
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={styles.input}
+                onChange={e => setEmail(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 placeholder="tu@email.com"
                 required
               />
             </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="password" className={styles.label}>
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-foreground"
+              >
                 Contraseña
               </label>
               <input
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={styles.input}
+                onChange={e => setPassword(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 placeholder="••••••••"
                 required
               />
             </div>
 
-            {error && <div className={styles.errorMessage}>{error}</div>}
+            {error && (
+              <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {error}
+              </div>
+            )}
 
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={isLoading}
-            >
-              {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
-            </button>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+            </Button>
           </form>
 
-          <div className={styles.footer}>
-            <p className={styles.footerText}>
+          <div className="pt-2 text-center text-xs text-muted-foreground space-y-2">
+            <p>
               ¿No tienes cuenta?{" "}
-              <a href="#" className={styles.link}>
+              <a
+                href="#"
+                className="font-medium text-primary hover:underline underline-offset-4"
+              >
                 Regístrate aquí
               </a>
             </p>
-            <a href="#" className={styles.forgotPassword}>
+            <a
+              href="#"
+              className="font-medium text-primary hover:underline underline-offset-4"
+            >
               ¿Olvidaste tu contraseña?
             </a>
           </div>

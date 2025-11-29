@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { BenefitCard } from "../../components/BenefitCard/BenefitCard"
-import styles from "./Home.module.css"
+import { Button } from "@/components/ui/button"
 
 // Datos de ejemplo para los beneficios
 const benefits = [
@@ -64,29 +64,39 @@ const benefits = [
 
 export const Home = () => {
   return (
-    <div className={styles.home}>
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
+    <div className="w-full">
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16 px-4 text-center">
+        <div className="max-w-3xl mx-auto space-y-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
             Bienvenido a tu Plataforma de Beneficios
           </h1>
-          <p className={styles.heroDescription}>
-            Descubre y aprovecha los mejores beneficios exclusivos para ti
+          <p className="text-sm sm:text-base md:text-lg text-primary-foreground/90">
+            Descubre y aprovecha los mejores beneficios exclusivos para vos y tu
+            equipo.
           </p>
-          <Link to="/login" className={styles.ctaButton}>
-            Iniciar Sesión
-          </Link>
+          <div className="pt-2 flex justify-center">
+            <Button asChild size="lg" variant="secondary">
+              <Link to="/login">Iniciar sesión</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
-      <section className={styles.benefitsSection}>
-        <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>Nuestros Beneficios</h2>
-          <p className={styles.sectionDescription}>
-            Explora nuestras categorías de beneficios disponibles
-          </p>
-          <div className={styles.benefitsGrid}>
-            {benefits.map((benefit) => (
+      {/* Grid de beneficios */}
+      <section className="bg-muted/30 py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center space-y-2 mb-8">
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground">
+              Nuestros beneficios
+            </h2>
+            <p className="text-sm md:text-base text-muted-foreground">
+              Explorá nuestras categorías de beneficios disponibles.
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {benefits.map(benefit => (
               <BenefitCard key={benefit.id} benefit={benefit} />
             ))}
           </div>
@@ -95,4 +105,5 @@ export const Home = () => {
     </div>
   )
 }
+
 
