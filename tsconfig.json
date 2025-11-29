@@ -9,10 +9,14 @@
     }
   ],
   "compilerOptions": {
-    // ... other options
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]  
+    },
     "types": [
       "vitest/globals",
       "@testing-library/jest-dom/vitest"
     ]
   }
+  
 }
