@@ -3,8 +3,8 @@ import axios, {
   type AxiosRequestConfig,
   type InternalAxiosRequestConfig,
 } from "axios"
+import { store } from "@/app/store"
 import { logout, selectToken } from "@/features/auth/authSlice"
-import { useAppDispatch, useAppSelector } from "@/app/hooks"
 
 const baseURL =
   import.meta.env.VITE_API_URL ?? "http://localhost:8080/api"
@@ -18,7 +18,8 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const token = useAppSelector(selectToken)
+    const state = store.getState()
+    const token = selectToken(state)
 
     if (token) {
       config.headers = config.headers ?? {}
@@ -33,10 +34,10 @@ api.interceptors.response.use(
   response => response,
   (error: AxiosError): Promise<never> => {
     const status = error.response?.status
-    const dispatch = useAppDispatch()
 
-    if (status === 401)
-      dispatch(logout())
+    if (status === 401) {
+      store.dispatch(logout())
+    }
 
     return Promise.reject(error)
   },

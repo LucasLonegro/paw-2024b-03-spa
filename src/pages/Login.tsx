@@ -1,59 +1,42 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff } from "lucide-react"
-import api from "@/api/axiosClient"
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "El email es requerido")
-    .email("Por favor ingresa un email válido"),
-  password: z
-    .string()
-    .min(8, "La contraseña debe tener al menos 8 caracteres"),
-})
-
-type LoginFormValues = z.infer<typeof loginSchema>
+import { LoginCredentials, loginSchema } from "@/features/auth/loginSchema"
+import { useLogin } from "@/features/auth/useLogin"
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
-  const [submitError, setSubmitError] = useState("")
   const navigate = useNavigate()
+  const loginMutation = useLogin()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
+    formState: { errors },
+  } = useForm<LoginCredentials>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      usernameOrEmail: "",
       password: "",
     },
   })
 
-  const onSubmit = async (values: LoginFormValues) => {
-    setSubmitError("")
-
-    try {
-      const loginEndpoint =
-        import.meta.env.VITE_LOGIN_ENDPOINT || "/auth/login"
-
-      const response = await api.post(loginEndpoint, values)
-      console.log("Login exitoso:", response.data)
-
-      navigate("/")
-    } catch (err) {
-      // Podés mejorar este manejo según la estructura de errores de tu API
-      setSubmitError("Ocurrió un error al iniciar sesión. Intenta nuevamente.")
-    }
+  const onSubmit = async (values: LoginCredentials) => {
+    loginMutation.mutate(values, {
+      onSuccess: () => {
+        navigate("/")
+      },
+      onError: (error) => {
+        // El error ya está manejado por useLogin
+        console.error("Error en login:", error)
+      },
+    })
   }
 
   return (
@@ -74,19 +57,19 @@ export default function Login() {
 
           <CardContent className="space-y-5">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* Email Input */}
+              {/* Username or Email Input */}
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="usernameOrEmail">Usuario o Email</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="tu@email.com"
+                  id="usernameOrEmail"
+                  type="text"
+                  placeholder="usuario o tu@email.com"
                   className="h-11"
-                  {...register("email")}
+                  {...register("usernameOrEmail")}
                 />
-                {errors.email && (
+                {errors.usernameOrEmail && (
                   <p className="text-xs text-destructive mt-1">
-                    {errors.email.message}
+                    {errors.usernameOrEmail.message}
                   </p>
                 )}
               </div>
@@ -127,9 +110,11 @@ export default function Login() {
               </div>
 
               {/* Error Message */}
-              {submitError && (
+              {loginMutation.error && (
                 <div className="text-sm text-destructive bg-destructive/10 border border-destructive/40 p-3 rounded-lg">
-                  {submitError}
+                  {loginMutation.error instanceof Error
+                    ? loginMutation.error.message
+                    : "Ocurrió un error al iniciar sesión. Intenta nuevamente."}
                 </div>
               )}
 
@@ -137,9 +122,9 @@ export default function Login() {
               <Button
                 type="submit"
                 className="w-full h-11 font-medium"
-                disabled={isSubmitting}
+                disabled={loginMutation.isPending}
               >
-                {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
+                {loginMutation.isPending ? "Iniciando..." : "Iniciar sesión"}
               </Button>
             </form>
 
