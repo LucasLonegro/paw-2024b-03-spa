@@ -33,14 +33,13 @@ export default function Login() {
         navigate("/")
       },
       onError: (error) => {
-        // El error ya está manejado por useLogin
         console.error("Error en login:", error)
       },
     })
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-slate-950/5 to-background flex items-center justify-center px-4 pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-background via-slate-950/5 to-background flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         <Card className="border border-border/60 shadow-lg bg-card/95 backdrop-blur">
           <CardHeader className="space-y-3 text-center">

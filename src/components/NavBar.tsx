@@ -1,10 +1,21 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { UserProfileDropdown } from "@/components/UserDropDown"
+import { useAppSelector, useAppDispatch } from "@/app/hooks"
+import { selectIsAuthenticated, logout } from "@/features/auth/authSlice"
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate("/login")
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
@@ -34,14 +45,20 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop CTA Buttons */}
+          {/* Desktop CTA Buttons / User Profile */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="outline" asChild>
-              <Link to="/login">Iniciar sesión</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/signup">Registrarse</Link>
-            </Button>
+            {isAuthenticated ? (
+              <UserProfileDropdown />
+            ) : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link to="/login">Iniciar sesión</Link>
+                </Button>
+                <Button asChild>
+                  <Link to="/signup">Registrarse</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -74,13 +91,27 @@ export function Navbar() {
             >
               Contacto
             </Link>
+
             <div className="flex gap-2 pt-2">
-              <Button variant="outline" asChild className="flex-1 bg-transparent">
-                <Link to="/login">Iniciar sesión</Link>
-              </Button>
-              <Button asChild className="flex-1">
-                <Link to="/signup">Registrarse</Link>
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Button variant="outline" asChild className="flex-1 bg-transparent">
+                    <Link to="/perfil">Mi Perfil</Link>
+                  </Button>
+                  <Button variant="outline" className="flex-1 bg-transparent" onClick={handleLogout}>
+                    Cerrar sesión
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" asChild className="flex-1 bg-transparent">
+                    <Link to="/login">Iniciar sesión</Link>
+                  </Button>
+                  <Button asChild className="flex-1">
+                    <Link to="/signup">Registrarse</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}
