@@ -39,12 +39,12 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-slate-950/5 to-background flex items-center justify-center px-4 py-8">
+    <div className="bg-gradient-to-br from-background via-slate-950/5 to-background flex items-center justify-center px-4 py-20">
       <div className="w-full max-w-md">
         <Card className="border border-border/60 shadow-lg bg-card/95 backdrop-blur">
-          <CardHeader className="space-y-3 text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary via-sky-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
+          <CardHeader className="space-y-2 text-center pb-5">
+            <div className="flex justify-center mb-3">
+              <div className="w-11 h-11 bg-gradient-to-br from-primary via-sky-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
                 <span className="text-primary-foreground font-bold text-xl">V</span>
               </div>
             </div>
@@ -54,7 +54,7 @@ export default function Login() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-5">
+          <CardContent className="space-y-4">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Username or Email Input */}
               <div className="space-y-2">
@@ -148,7 +148,7 @@ export default function Login() {
         </Card>
 
         {/* Additional Links */}
-        <div className="text-center mt-6 text-sm text-muted-foreground">
+        <div className="text-center mt-5 text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground transition-colors">
             Volver a inicio
           </Link>
